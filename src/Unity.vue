@@ -15,7 +15,7 @@
 </template>
 
 <script>
-  import Vue from 'vue'
+  import {createApp} from 'vue'
 
   export default {
     props: ['src', 'module', 'width', 'height', 'externalProgress', 'unityLoader', 'hideFooter'],
@@ -47,14 +47,17 @@
     beforeMount() {
 
       if (!this.eventBus) {
-        this.eventBus = new Vue({
-          data: {
-            ready: false,
-            load: false
+        this.eventBus = createApp({
+          data() {
+            return {
+              ready: false,
+              load: false
+            }
           }
         })
       }
 
+      // eslint-disable-next-line
       if (typeof UnityLoader === 'undefined' && this.unityLoader && !this.eventBus.load) {
         const script = document.createElement('SCRIPT')
         script.setAttribute('src', this.unityLoader)
@@ -98,6 +101,7 @@
         if (this.module) {
           params.Module = this.module
         }
+      // eslint-disable-next-line
         this.gameInstance = UnityLoader.instantiate(this.containerId, this.src, params)
       }
 
